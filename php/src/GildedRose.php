@@ -51,7 +51,10 @@ final class GildedRose
                     $this->updateBackstage($item);
                     break;
                 case EnumItem::SULFURAS->value:
-                    $this->updatedSulfuras($item);
+                    $this->updateSulfuras($item);
+                    break;
+                case EnumItem::CONJURED->value:
+                    $this->updateConjured($item);
                     break;
                 default:
                     $this->updateNormalItem($item);
@@ -102,8 +105,20 @@ final class GildedRose
         $item->quality = self::ZERO;
     }
 
-    private function updatedSulfuras(Item $item): void
+    private function updateSulfuras(Item $item): void
     {
         // "Sulfuras" est un objet légendaire et comme tel sa qualité est de 80 et elle ne change jamais.
+    }
+
+    private function updateConjured(Item $item): void
+    {
+        $this->decreaseQuality($item);
+        $this->decreaseQuality($item);
+        $this->decreaseSellIn($item);
+
+        if($item->sellIn < self::ZERO) {
+            $this->decreaseQuality($item);
+            $this->decreaseQuality($item);
+        }
     }
 }
