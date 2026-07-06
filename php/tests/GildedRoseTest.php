@@ -105,4 +105,24 @@ class GildedRoseTest extends TestCase
 
         $this->assertEquals(50, $items[0]->quality);
     }
+
+    public function testConjuredItemDecreaseTwiceQuality(): void
+    {
+        $items = [new Item(EnumItem::CONJURED->value, 10, 50)];
+        $gildedRose = new GildedRose($items);
+        $gildedRose->updateQuality();
+
+        $this->assertEquals(48, $items[0]->quality);
+        $this->assertEquals(9, $items[0]->sellIn);
+    }
+
+    public function testConjuredItemDecreaseDoubleTwiceQualitySellInZero(): void
+    {
+        $items = [new Item(EnumItem::CONJURED->value, 0, 50)];
+        $gildedRose = new GildedRose($items);
+        $gildedRose->updateQuality();
+
+        $this->assertEquals(46, $items[0]->quality);
+        $this->assertEquals(-1, $items[0]->sellIn);
+    }
 }

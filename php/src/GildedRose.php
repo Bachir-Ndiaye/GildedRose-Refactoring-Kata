@@ -31,10 +31,6 @@ final class GildedRose
         }
     }
 
-    private function increaseSellIn(Item $item): void
-    {
-        $item->sellIn++;
-    }
     private function decreaseSellIn(Item $item): void
     {
         $item->sellIn--;
