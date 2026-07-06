@@ -13,28 +13,51 @@ final class GildedRose
         private array $items
     ) {
     }
+    const MAX_QUALITY = 50;
+    const ZERO = 0;
+    
+    public function increaseQuality(Item $item): void
+    {
+        if($item->quality < self::MAX_QUALITY) {
+            $item->quality++;
+        }
+    }
+
+    public function decreaseQuality(Item $item): void
+    {
+        $item->quality--;
+    }
+
+    public function increaseSellIn(Item $item): void
+    {
+        $item->sellIn++;
+    }
+    public function decreaseSellIn(Item $item): void
+    {
+        $item->sellIn--;
+    }
 
     public function updateQuality(): void
     {
         foreach ($this->items as $item) {
             if ($item->name != EnumItem::AGED_BRIE->value and $item->name != EnumItem::BACKSTAGE->value) {
-                if ($item->quality > 0) {
+                if ($item->quality > self::ZERO) {
                     if ($item->name != EnumItem::SULFURAS->value) {
-                        $item->quality = $item->quality - 1;
+                        $this->decreaseQuality($item);
                     }
                 }
             } else {
-                if ($item->quality < 50) {
-                    $item->quality = $item->quality + 1;
+                if ($item->quality < self::MAX_QUALITY) {
+                    $this->increaseQuality($item);
                     if ($item->name == EnumItem::BACKSTAGE->value) {
                         if ($item->sellIn < 11) {
-                            if ($item->quality < 50) {
-                                $item->quality = $item->quality + 1;
+                            if ($item->quality < self::MAX_QUALITY) {
+                                $this->increaseQuality($item);
                             }
                         }
                         if ($item->sellIn < 6) {
-                            if ($item->quality < 50) {
-                                $item->quality = $item->quality + 1;
+                            if ($item->quality < self::MAX_QUALITY) {
+                                $this->increaseQuality($item);
                             }
                         }
                     }
@@ -42,23 +65,23 @@ final class GildedRose
             }
 
             if ($item->name != EnumItem::SULFURAS->value) {
-                $item->sellIn = $item->sellIn - 1;
+                $this->decreaseSellIn($item);
             }
 
-            if ($item->sellIn < 0) {
+            if ($item->sellIn < self::ZERO) {
                 if ($item->name != EnumItem::AGED_BRIE->value) {
                     if ($item->name != EnumItem::BACKSTAGE->value) {
-                        if ($item->quality > 0) {
+                        if ($item->quality > self::ZERO) {
                             if ($item->name != EnumItem::SULFURAS->value) {
-                                $item->quality = $item->quality - 1;
+                                $this->decreaseQuality($item);
                             }
                         }
                     } else {
-                        $item->quality = $item->quality - $item->quality;
+                        $item->quality = self::ZERO;
                     }
                 } else {
-                    if ($item->quality < 50) {
-                        $item->quality = $item->quality + 1;
+                    if ($item->quality < self::MAX_QUALITY) {
+                        $this->increaseQuality($item);
                     }
                 }
             }
